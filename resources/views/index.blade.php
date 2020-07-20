@@ -42,7 +42,8 @@
             </div>
 
             <div class="col-sm-10 form-group has-search">
-                <input type="text" class="form-control" placeholder="Search">
+                <input type="text" id="searchBox" onkeyup="searchImage(this.value)" class="form-control"
+                    placeholder="Search">
             </div>
         </div>
 
@@ -320,6 +321,7 @@
 
         });
 
+        //initate the content of the json
         function initiateContent() {
             var images = [];
             var html = "";
@@ -337,8 +339,9 @@
                         value.image_path +
                         '" alt=""></a>';
                     html += '<p class="text-truncate">' + value.title + '</p>';
-                    html += '<div class="col text-center">';   
-                    html += "<button class='btn btn-danger' data-id='"+value.id+"' onclick='deleteImage(this)'>Remove</button>";
+                    html += '<div class="col text-center">';
+                    html += "<button class='btn btn-danger' data-id='" + value.id +
+                        "' onclick='deleteImage(this)'>Remove</button>";
                     html += '</div></div>';
 
 
@@ -355,25 +358,26 @@
             });
         }
 
+        //delete request of image
         function deleteImage(context) {
             id = $(context).attr('data-id');
-            console.log(id);
+            //console.log(id);
             alertify.confirm('Are You Sure?', 'The image will be deleted! ',
                 function () {
                     $.ajax({
                         url: "{{ url('image/delete') }}",
                         method: "POST",
                         data: {
-                            id:id
+                            id: id
                         },
                         success: function (result) {
                             if (typeof result.errors !== 'undefined') {
-                                        alertify.notify(val, 'error',5);
+                                alertify.notify(val, 'error', 5);
                             } else {
-                                
-                                alertify.notify("Image Delete Successfull", 'success',5);
+
+                                alertify.notify("Image Delete Successfull", 'success', 5);
                                 initiateContent();
-                                $("#containerDiv").load(location.href +" #containerDiv");
+                                $("#containerDiv").load(location.href + " #containerDiv");
 
                             }
 
@@ -410,7 +414,7 @@
 
                         }
                     });
-                    
+
                 },
                 function () {
                     alertify.error('Operation Canceled!')
@@ -418,6 +422,59 @@
 
         }
 
+        //search operation of image
+        function searchImage(title) {
+            //console.log(title);
+            var images = [];
+            var filterArray = [];
+            var html = "";
+
+            $.getJSON("{{asset('data/imageData.json')}}", function (json) {
+                images = JSON.parse(JSON.stringify(json));
+
+                var foundValue = images.filter(obj => obj.title.toLowerCase().includes(title.toLowerCase()));
+                if (foundValue !== null) {
+                    filterArray = foundValue;
+                }
+
+                $.each(filterArray, function (index, value) {
+                   // console.log(value);
+                    html += '<div class="col-lg-3 col-md-4 col-6 mb-2">';
+                    html += '<a href="' + value.image_path + '" data-sub-html="' + value.title + '">';
+
+                    html += '<img height="300" width="300" class="img-fluid img-thumbnail" src="' +
+                        value.image_path +
+                        '" alt=""></a>';
+                    html += '<p class="text-truncate">' + value.title + '</p>';
+                    html += '<div class="col text-center">';
+                    html += "<button class='btn btn-danger' data-id='" + value.id +
+                        "' onclick='deleteImage(this)'>Remove</button>";
+                    html += '</div></div>';
+
+
+                });
+               // console.log(html);
+                $("#gallery").empty();
+                $("#gallery").append(html);
+                //init Light Gallery
+                // $("#gallery").lightGallery({
+                //     thumbnail: true,
+                //     selector: 'a'
+                // });
+
+              
+
+
+                
+            });
+
+
+
+
+
+        }
+
+        //reset dropify image preview
         function resetDropify(id) {
             var drEvent = $(id).dropify();
             drEvent = drEvent.data('dropify');
