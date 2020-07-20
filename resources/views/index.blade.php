@@ -243,6 +243,8 @@
                                             5);
                                     });
                                 });
+                                $(".progress-bar").width('0%');
+                                $(".progress-bar").html('');
                                 $("#uploadText").html("Upload");
                                 $("#upload-btn").attr('disabled', false);
                             } else {
