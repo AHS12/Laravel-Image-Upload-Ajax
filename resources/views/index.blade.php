@@ -30,7 +30,7 @@
 <body>
 
 
-    <div class="container">
+    <div class="container" id="containerDiv">
         {{-- <h1>Hello, world!</h1> --}}
         <div>
 
@@ -50,50 +50,6 @@
         <hr class="mt-2 mb-5">
 
         <div class="row text-center text-lg-left" id="gallery">
-
-
-            <div class="col-lg-3 col-md-4 col-6 mb-2">
-                <a href="https://source.unsplash.com/pWkk7iiCoDM/400x300" data-sub-html="title">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
-                </a>
-                <p class="text-truncate">Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Curabitur
-                    aliquet quam id dui posuere blandit. </p>
-                    <div class="col text-center">
-                        <button class="btn btn-danger">Remove</button>
-                    </div>
-                
-            </div>
-            <div class="col-lg-3 col-md-4 col-6 mb-2">
-                <a href="https://source.unsplash.com/aob0ukAYfuI/400x300" data-sub-html="title">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/aob0ukAYfuI/400x300" alt="">
-                </a>
-                <p>title</p>
-                <button class="btn btn-danger">Remove</button>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6 mb-2">
-                <a href="https://source.unsplash.com/EUfxH-pze7s/400x300" data-sub-html="title">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/EUfxH-pze7s/400x300" alt="">
-                </a>
-                <p>title</p>
-                <button class="btn btn-danger">Remove</button>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6 mb-2">
-                <a href="https://source.unsplash.com/M185_qYH8vg/400x300" data-sub-html="title">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/M185_qYH8vg/400x300" alt="">
-                </a>
-                <p>title</p>
-                <button class="btn btn-danger">Remove</button>
-            </div>
-
-            <div class="col-lg-3 col-md-4 col-6 mb-2">
-                <a href="https://source.unsplash.com/M185_qYH8vg/400x300" data-sub-html="title">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/M185_qYH8vg/400x300" alt="">
-                </a>
-                <p>title</p>
-                <button class="btn btn-danger">Remove</button>
-            </div>
-
-
 
         </div>
 
@@ -127,7 +83,8 @@
                             </div>
                         </div>
                         <div class="col text-center">
-                            <button type="submit" id="upload-btn" class="btn btn-primary text-center"><span id="uploadText">Upload</span></button>
+                            <button type="submit" id="upload-btn" class="btn btn-primary text-center"><span
+                                    id="uploadText">Upload</span></button>
                         </div>
                         <hr class="mt-2 mb-5">
                         <!-- Progress bar -->
@@ -178,11 +135,14 @@
                 }
             });
 
+            //initial data load
+            initiateContent();
+
             //init Light Gallery
-            $("#gallery").lightGallery({
-                thumbnail: true,
-                selector: 'a'
-            });
+            // $("#gallery").lightGallery({
+            //     thumbnail: true,
+            //     selector: 'a'
+            // });
 
             //init Dropify
             $('.dropify').dropify();
@@ -245,7 +205,8 @@
                             var xhr = new window.XMLHttpRequest();
                             xhr.upload.addEventListener("progress", function (evt) {
                                 if (evt.lengthComputable) {
-                                    var percentComplete = Math.round((evt.loaded / evt
+                                    var percentComplete = Math.round((evt
+                                        .loaded / evt
                                         .total) * 100);
 
                                     $(".progress-bar").width(percentComplete +
@@ -267,7 +228,7 @@
                         beforeSend: function () {
                             $(".progress-bar").width('0%');
                             $("#uploadText").html("Uploading....");
-                            $("#upload-btn").attr('disabled',true);
+                            $("#upload-btn").attr('disabled', true);
                         },
                         success: function (result) {
                             if (typeof result.errors !== 'undefined') {
@@ -277,19 +238,24 @@
                                     //console.log(index, val)
                                     $.each(val, function (index, val) {
                                         //console.log(index, val)
-                                        alertify.notify(val,'error',5);
+                                        alertify.notify(val, 'error',
+                                            5);
                                     });
                                 });
                                 $("#uploadText").html("Upload");
-                                $("#upload-btn").attr('disabled',false);
+                                $("#upload-btn").attr('disabled', false);
                             } else {
                                 $(form).trigger('reset');
                                 resetDropify("#image");
                                 $(".progress-bar").width('0%');
                                 $(".progress-bar").html('');
-                                alertify.notify("Image Upload Successfull",'success',5);
+                                alertify.notify("Image Upload Successfull", 'success',
+                                    5);
                                 $("#uploadText").html("Upload");
-                                $("#upload-btn").attr('disabled',false);
+                                $("#upload-btn").attr('disabled', false);
+                                initiateContent();
+                                $("#containerDiv").load(location.href +
+                                    " #containerDiv");
 
                             }
 
@@ -300,47 +266,47 @@
                                 msg = 'Not connect.Verify Network.';
                                 alertify.notify(msg, 'error', 5);
                                 $("#uploadText").html("Upload");
-                                $("#upload-btn").attr('disabled',false);
+                                $("#upload-btn").attr('disabled', false);
 
                             } else if (jqXHR.status == 404) {
                                 msg = 'Requested page not found. [404]';
                                 alertify.notify(msg, 'error', 5);
                                 $("#uploadText").html("Upload");
-                                $("#upload-btn").attr('disabled',false);
+                                $("#upload-btn").attr('disabled', false);
                             } else if (jqXHR.status == 413) {
                                 alertify.notify(msg, 'error', 5);
                                 $("#uploadText").html("Upload");
-                                $("#upload-btn").attr('disabled',false);
+                                $("#upload-btn").attr('disabled', false);
                             } else if (jqXHR.status == 419) {
                                 msg = 'CSRF error or Unknown Status [419]';
                                 alertify.notify(msg, 'error', 5);
                                 $("#uploadText").html("Upload");
-                                $("#upload-btn").attr('disabled',false);
+                                $("#upload-btn").attr('disabled', false);
                             } else if (jqXHR.status == 500) {
                                 msg = 'Internal Server Error [500].';
                                 alertify.notify(msg, 'error', 5);
                                 $("#uploadText").html("Upload");
-                                $("#upload-btn").attr('disabled',false);
+                                $("#upload-btn").attr('disabled', false);
                             } else if (exception === 'parsererror') {
                                 msg = 'Requested JSON parse failed.';
                                 alertify.notify(msg, 'error', 5);
                                 $("#uploadText").html("Upload");
-                                $("#upload-btn").attr('disabled',false);
+                                $("#upload-btn").attr('disabled', false);
                             } else if (exception === 'timeout') {
                                 msg = 'Time out error.';
                                 alertify.notify(msg, 'error', 5);
                                 $("#uploadText").html("Upload");
-                                $("#upload-btn").attr('disabled',false);
+                                $("#upload-btn").attr('disabled', false);
                             } else if (exception === 'abort') {
                                 msg = 'Ajax request aborted.';
                                 alertify.notify(msg, 'error', 5);
                                 $("#uploadText").html("Upload");
-                                $("#upload-btn").attr('disabled',false);
+                                $("#upload-btn").attr('disabled', false);
                             } else {
                                 msg = 'Uncaught Error.\n' + jqXHR.responseText;
                                 alertify.notify(msg, 'error', 5);
                                 $("#uploadText").html("Upload");
-                                $("#upload-btn").attr('disabled',false);
+                                $("#upload-btn").attr('disabled', false);
                             }
 
                         }
@@ -353,6 +319,104 @@
 
 
         });
+
+        function initiateContent() {
+            var images = [];
+            var html = "";
+            $.getJSON("{{asset('data/imageData.json')}}", function (json) {
+                images = JSON.parse(JSON.stringify(json));
+                images.reverse();
+                $.each(images, function (index, value) {
+                    //console.log(value);
+                    // var image_path = "{{asset("+value.image_path+")}}";
+                    // console.log(image_path);
+                    html += '<div class="col-lg-3 col-md-4 col-6 mb-2">';
+                    html += '<a href="' + value.image_path + '" data-sub-html="' + value.title + '">';
+
+                    html += '<img height="300" width="300" class="img-fluid img-thumbnail" src="' +
+                        value.image_path +
+                        '" alt=""></a>';
+                    html += '<p class="text-truncate">' + value.title + '</p>';
+                    html += '<div class="col text-center">';   
+                    html += "<button class='btn btn-danger' data-id='"+value.id+"' onclick='deleteImage(this)'>Remove</button>";
+                    html += '</div></div>';
+
+
+                });
+                // console.log(html);
+                $("#gallery").empty();
+                $("#gallery").append(html);
+                //init Light Gallery
+                $("#gallery").lightGallery({
+                    thumbnail: true,
+                    selector: 'a'
+                });
+
+            });
+        }
+
+        function deleteImage(context) {
+            id = $(context).attr('data-id');
+            console.log(id);
+            alertify.confirm('Are You Sure?', 'The image will be deleted! ',
+                function () {
+                    $.ajax({
+                        url: "{{ url('image/delete') }}",
+                        method: "POST",
+                        data: {
+                            id:id
+                        },
+                        success: function (result) {
+                            if (typeof result.errors !== 'undefined') {
+                                        alertify.notify(val, 'error',5);
+                            } else {
+                                
+                                alertify.notify("Image Delete Successfull", 'success',5);
+                                initiateContent();
+                                $("#containerDiv").load(location.href +" #containerDiv");
+
+                            }
+
+                        },
+                        error: function (jqXHR, exception) {
+                            var msg = '';
+                            if (jqXHR.status === 0) {
+                                msg = 'Not connect.Verify Network.';
+                                alertify.notify(msg, 'error', 5);
+                            } else if (jqXHR.status == 404) {
+                                msg = 'Requested page not found. [404]';
+                                alertify.notify(msg, 'error', 5);
+                            } else if (jqXHR.status == 413) {
+                                alertify.notify(msg, 'error', 5);
+                            } else if (jqXHR.status == 419) {
+                                msg = 'CSRF error or Unknown Status [419]';
+                                alertify.notify(msg, 'error', 5);
+                            } else if (jqXHR.status == 500) {
+                                msg = 'Internal Server Error [500].';
+                                alertify.notify(msg, 'error', 5);
+                            } else if (exception === 'parsererror') {
+                                msg = 'Requested JSON parse failed.';
+                                alertify.notify(msg, 'error', 5);
+                            } else if (exception === 'timeout') {
+                                msg = 'Time out error.';
+                                alertify.notify(msg, 'error', 5);
+                            } else if (exception === 'abort') {
+                                msg = 'Ajax request aborted.';
+                                alertify.notify(msg, 'error', 5);
+                            } else {
+                                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                                alertify.notify(msg, 'error', 5);
+                            }
+
+                        }
+                    });
+                    
+                },
+                function () {
+                    alertify.error('Operation Canceled!')
+                });
+
+        }
 
         function resetDropify(id) {
             var drEvent = $(id).dropify();

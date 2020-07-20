@@ -17,3 +17,4 @@ Route::get('/', function () {
 
 //upload Route
 Route::post('image/upload','image\ImageController@imageUploadAjax');
+Route::post('image/delete','image\ImageController@imageDeleteAjax');

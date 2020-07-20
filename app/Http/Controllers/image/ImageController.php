@@ -53,12 +53,12 @@ class ImageController extends Controller
             //     RecursiveIteratorIterator::SELF_FIRST
             // );
             if ($jsonIterator != null) {
-               
+
                 foreach ($jsonIterator as $image) {
-                    array_push($imageArray,$image);
+                    array_push($imageArray, $image);
                 }
             }
-           
+
 
             //current time
             $current_timestamp = Carbon::now()->timestamp;
@@ -73,15 +73,48 @@ class ImageController extends Controller
 
             //saving in json    
             $attributeNames = array(
+                'id'            => base64_encode($request->title) . time(),
                 'title'         => $request->title,
                 'image_path'    => $attachment_path,
                 'created_at'    => $current_timestamp
             );
 
-            array_push($imageArray,$attributeNames);
+            array_push($imageArray, $attributeNames);
             $jsonData = json_encode($imageArray, JSON_UNESCAPED_SLASHES);
             file_put_contents('data/imageData.json', $jsonData);
 
+            return response()->json("Success");
+        }
+    }
+
+
+    public function imageDeleteAjax(Request $request)
+    {
+        $id = $request->id;
+
+        $imageArray = [];
+        $jsonString = file_get_contents('data/imageData.json');
+        //$images = json_decode($jsonString, true);
+        $jsonIterator = json_decode($jsonString, true);
+
+        if ($jsonIterator != null) {
+
+            foreach ($jsonIterator as $image) {
+                // dd($image);
+                if (array_search($id, $image)) {
+                    $index = array_search($id, array_column($jsonIterator, 'id'));
+                    $element = $jsonIterator[$index];
+                    $imagePath = $element['image_path'];
+                    if (File::exists($imagePath)) {
+                        File::delete($imagePath);
+                    }
+                } else {
+                    array_push($imageArray, $image);
+                }
+            }
+
+            $jsonData = json_encode($imageArray, JSON_UNESCAPED_SLASHES);
+            file_put_contents('data/imageData.json', $jsonData);
             return response()->json("Success");
         }
     }
