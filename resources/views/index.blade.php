@@ -299,30 +299,48 @@
                             if (jqXHR.status === 0) {
                                 msg = 'Not connect.Verify Network.';
                                 alertify.notify(msg, 'error', 5);
+                                $("#uploadText").html("Upload");
+                                $("#upload-btn").attr('disabled',false);
 
                             } else if (jqXHR.status == 404) {
                                 msg = 'Requested page not found. [404]';
                                 alertify.notify(msg, 'error', 5);
+                                $("#uploadText").html("Upload");
+                                $("#upload-btn").attr('disabled',false);
                             } else if (jqXHR.status == 413) {
                                 alertify.notify(msg, 'error', 5);
+                                $("#uploadText").html("Upload");
+                                $("#upload-btn").attr('disabled',false);
                             } else if (jqXHR.status == 419) {
                                 msg = 'CSRF error or Unknown Status [419]';
                                 alertify.notify(msg, 'error', 5);
+                                $("#uploadText").html("Upload");
+                                $("#upload-btn").attr('disabled',false);
                             } else if (jqXHR.status == 500) {
                                 msg = 'Internal Server Error [500].';
                                 alertify.notify(msg, 'error', 5);
+                                $("#uploadText").html("Upload");
+                                $("#upload-btn").attr('disabled',false);
                             } else if (exception === 'parsererror') {
                                 msg = 'Requested JSON parse failed.';
                                 alertify.notify(msg, 'error', 5);
+                                $("#uploadText").html("Upload");
+                                $("#upload-btn").attr('disabled',false);
                             } else if (exception === 'timeout') {
                                 msg = 'Time out error.';
                                 alertify.notify(msg, 'error', 5);
+                                $("#uploadText").html("Upload");
+                                $("#upload-btn").attr('disabled',false);
                             } else if (exception === 'abort') {
                                 msg = 'Ajax request aborted.';
                                 alertify.notify(msg, 'error', 5);
+                                $("#uploadText").html("Upload");
+                                $("#upload-btn").attr('disabled',false);
                             } else {
                                 msg = 'Uncaught Error.\n' + jqXHR.responseText;
                                 alertify.notify(msg, 'error', 5);
+                                $("#uploadText").html("Upload");
+                                $("#upload-btn").attr('disabled',false);
                             }
 
                         }
